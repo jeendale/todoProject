@@ -38,8 +38,17 @@ public class Todo {
         this.content=dto.getContent();
         this.createDate=LocalDateTime.now();
     }
+
+    //연관관계 메사드
     public void setUser(User user){
         this.user=user;
        // user.getTodoList().add(this);
+    }
+    //서비스 메서드
+    public void setTitle(String title){
+        this.title=title;
+    }
+    public void  setContent(String content){
+        this.content=content;
     }
 }

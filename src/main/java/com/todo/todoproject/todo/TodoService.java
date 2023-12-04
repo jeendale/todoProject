@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.RejectedExecutionException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -49,4 +51,17 @@ public class TodoService {
         return userTodoMap;
     }
 
+    @Transactional
+    public TodoResponseDto updateTodo(Long todoId,TodoRequestDto todoRequestDto, User user) {
+        Todo todo=todoRepository.findById(todoId).orElseThrow(()->new IllegalArgumentException("존재하지 않은 할일 ID입니다."));
+
+        if(!user.getId().equals(todo.getUser().getId())){
+            throw new RejectedExecutionException("작성자만 수정할 수 있습니다.");
+        }
+
+        todo.setTitle((todoRequestDto.getTitle()));
+        todo.setContent(todoRequestDto.getContent());
+
+        return new TodoResponseDto(todo);
+    }
 }
