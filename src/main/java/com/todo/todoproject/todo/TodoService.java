@@ -25,7 +25,7 @@ public class TodoService {
         return  new TodoResponseDto(todo);
     }
 
-    public TodoResponseDto getTodo(Long todoId) {
+    public TodoResponseDto getTodoDto(Long todoId) {
         Todo todo= todoRepository.findById(todoId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 todo입니다."));
 
         return new TodoResponseDto(todo);
@@ -53,15 +53,35 @@ public class TodoService {
 
     @Transactional
     public TodoResponseDto updateTodo(Long todoId,TodoRequestDto todoRequestDto, User user) {
-        Todo todo=todoRepository.findById(todoId).orElseThrow(()->new IllegalArgumentException("존재하지 않은 할일 ID입니다."));
-
-        if(!user.getId().equals(todo.getUser().getId())){
-            throw new RejectedExecutionException("작성자만 수정할 수 있습니다.");
-        }
+        Todo todo=getUserTodo(todoId,user);
 
         todo.setTitle((todoRequestDto.getTitle()));
         todo.setContent(todoRequestDto.getContent());
 
         return new TodoResponseDto(todo);
+    }
+
+    @Transactional
+    public TodoResponseDto completeTodo(Long todoId, User user) {
+        Todo todo = getUserTodo(todoId, user);
+
+        todo.complete();//완료
+
+        return new TodoResponseDto(todo);
+    }
+
+    public Todo getTodo(Long todoId) {
+
+        return todoRepository.findById(todoId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 할일 ID 입니다."));
+    }
+
+    public Todo getUserTodo(Long todoId, User user) {
+        Todo todo = getTodo(todoId);
+
+        if(!user.getId().equals(todo.getUser().getId())) {
+            throw new RejectedExecutionException("작성자만 수정할 수 있습니다.");
+        }
+        return todo;
     }
 }

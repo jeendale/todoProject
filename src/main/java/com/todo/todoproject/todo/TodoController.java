@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,7 +35,7 @@ public class TodoController {
     @GetMapping("/{todoId}")
     public ResponseEntity<CommonResponseDto> getTodo(@PathVariable Long todoId){
        try {
-           TodoResponseDto responseDto = todoService.getTodo(todoId);
+           TodoResponseDto responseDto = todoService.getTodoDto(todoId);
            return ResponseEntity.ok().body(responseDto);
        }catch (IllegalArgumentException e){
            return  ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(),HttpStatus.BAD_REQUEST.value()));
@@ -56,6 +57,16 @@ public class TodoController {
     public ResponseEntity<CommonResponseDto> putTodo(@PathVariable Long todoId,@RequestBody TodoRequestDto todoRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
         try {
             TodoResponseDto responseDto = todoService.updateTodo(todoId,todoRequestDto, userDetails.getUser());
+            return ResponseEntity.ok().body(responseDto);
+        }catch (RejectedExecutionException | IllegalArgumentException  ex){
+            return  ResponseEntity.badRequest().body(new CommonResponseDto(ex.getMessage(),HttpStatus.BAD_REQUEST.value()));
+        }
+    }
+
+    @PatchMapping ("/{todoId}/complete")
+    public ResponseEntity<CommonResponseDto> patchTodo(@PathVariable Long todoId,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        try {
+            TodoResponseDto responseDto = todoService.completeTodo(todoId,userDetails.getUser());
             return ResponseEntity.ok().body(responseDto);
         }catch (RejectedExecutionException | IllegalArgumentException  ex){
             return  ResponseEntity.badRequest().body(new CommonResponseDto(ex.getMessage(),HttpStatus.BAD_REQUEST.value()));
