@@ -24,10 +24,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public UserDetails getUserDetails(String username){
-        User user=userRepository.findByUsername(username).orElseThrow(()->new UsernameNotFoundException("Not  Found"+username));
-        return new UserDetailsImpl(user);
-    }
 
     public void login(UserRequestDto userRequestDto) {
         String username= userRequestDto.getUsername();

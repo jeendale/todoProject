@@ -3,6 +3,7 @@ package com.todo.todoproject.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todo.todoproject.CommonResponseDto;
 import com.todo.todoproject.user.UserDetailsImpl;
+import com.todo.todoproject.user.UserDetailsService;
 import com.todo.todoproject.user.UserService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -27,7 +28,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-    private  final UserService userService;
+    private  final UserDetailsService userDetailsService;
 
     private final ObjectMapper objectMapper;
     @Override
@@ -43,7 +44,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 //username->user조회->userDetails에 담고 ->authentication의 principal에 담고
                 String username = info.getSubject();
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
-                UserDetails userDetails = userService.getUserDetails(username);
+                UserDetails userDetails = userDetailsService.getUserDetails(username);
                 Authentication authentication=new UsernamePasswordAuthenticationToken(userDetails,null);
                 //->securityContent에 담고
                 context.setAuthentication(authentication);

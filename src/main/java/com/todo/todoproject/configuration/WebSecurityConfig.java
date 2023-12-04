@@ -3,6 +3,7 @@ package com.todo.todoproject.configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todo.todoproject.jwt.JwtAuthorizationFilter;
 import com.todo.todoproject.jwt.JwtUtil;
+import com.todo.todoproject.user.UserDetailsService;
 import com.todo.todoproject.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -23,7 +24,7 @@ public class WebSecurityConfig {
 
     private  final JwtUtil jwtUtil;
 
-    private  final UserService userService;
+    private  final UserDetailsService userDetailsService;
 
     private  final ObjectMapper objectMapper;
     @Bean
@@ -33,7 +34,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter(){
-        return new JwtAuthorizationFilter(jwtUtil,userService,objectMapper);
+        return new JwtAuthorizationFilter(jwtUtil,userDetailsService,objectMapper);
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
