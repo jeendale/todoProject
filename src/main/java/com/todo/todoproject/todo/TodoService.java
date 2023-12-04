@@ -17,4 +17,9 @@ public class TodoService {
         return  new TodoResponseDto(todo);
     }
 
+    public TodoResponseDto getTodo(Long todoId) {
+        Todo todo= todoRepository.findById(todoId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 todo입니다."));
+
+        return new TodoResponseDto(todo);
+    }
 }
