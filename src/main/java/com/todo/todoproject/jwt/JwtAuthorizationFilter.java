@@ -45,7 +45,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 String username = info.getSubject();
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
                 UserDetails userDetails = userDetailsService.getUserDetails(username);
-                Authentication authentication=new UsernamePasswordAuthenticationToken(userDetails,null);
+                Authentication authentication=new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
                 //->securityContent에 담고
                 context.setAuthentication(authentication);
                 //->SecurityContextHolder에 담고
@@ -58,6 +58,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.setContentType("application/json; charset=UTF-8");
                 response.getWriter().write(objectMapper.writeValueAsString(commonResponseDto));
+                return;
             }
         }
 
