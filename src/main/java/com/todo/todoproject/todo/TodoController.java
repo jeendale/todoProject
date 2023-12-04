@@ -1,7 +1,11 @@
 package com.todo.todoproject.todo;
 
 import com.todo.todoproject.CommonResponseDto;
+import com.todo.todoproject.user.User;
 import com.todo.todoproject.user.UserDetailsImpl;
+import com.todo.todoproject.user.UserDto;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +39,9 @@ public class TodoController {
 
     }
     @GetMapping
-    public ResponseEntity<Void> getTodoList(){
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Map<UserDto, List<TodoResponseDto>>> getTodoMap(){
+        Map<UserDto, List<TodoResponseDto>> responseDtoList=todoService.getUserTodoMap();
+        return ResponseEntity.ok().body(responseDtoList);
     }
 
 }
