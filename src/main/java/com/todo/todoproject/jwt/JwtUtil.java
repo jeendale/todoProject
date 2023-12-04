@@ -12,6 +12,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
+import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -63,5 +64,21 @@ public class JwtUtil {
 
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+
+    public String createToken(String username) {
+        Date date=new Date();
+
+        //토큰 만료시간 60분
+        long TOKEN_TIME=60*60*1000;
+        return BEARER_PREFIX+
+            Jwts.builder()
+                .setSubject(username)
+                .setExpiration(new Date(date.getTime()+TOKEN_TIME))
+                .setIssuedAt(date)
+                .signWith(key, signatureAlgorithm)
+                .compact();
+
+
     }
 }
