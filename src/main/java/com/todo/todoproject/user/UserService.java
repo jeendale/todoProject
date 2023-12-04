@@ -1,6 +1,8 @@
-package com.todo.todoproject;
+package com.todo.todoproject.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +22,10 @@ public class UserService {
 
         User user = new User(username, password);
         userRepository.save(user);
+    }
+
+    public UserDetails getUserDetails(String username){
+        User user=userRepository.findByUsername(username).orElseThrow(()->new UsernameNotFoundException("Not  Found"+username));
+        return new UserDetailsImpl(user);
     }
 }

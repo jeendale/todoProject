@@ -1,5 +1,6 @@
-package com.todo.todoproject;
+package com.todo.todoproject.user;
 
+import com.todo.todoproject.CommonResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

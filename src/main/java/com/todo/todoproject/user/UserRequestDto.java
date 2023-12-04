@@ -1,4 +1,4 @@
-package com.todo.todoproject;
+package com.todo.todoproject.user;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
